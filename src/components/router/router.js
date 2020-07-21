@@ -97,7 +97,6 @@ class Router {
   }
 
   setOnDispatchCallback(onDispatch: Function<Object, ?string>) {
-    // this.onDispatch = onDispatch;
     this.onDispatchCallbacks.push(onDispatch);
   }
 
@@ -161,6 +160,10 @@ class Router {
 
   _getNavigator() {
     return this._navigator;
+  }
+
+  getCurrentRouteName(): string {
+    return this._currentRoute.routeName;
   }
 
   onNavigationStateChange = (prevNav, nav, action, onRoute) => {

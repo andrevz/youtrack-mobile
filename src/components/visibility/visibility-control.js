@@ -14,7 +14,7 @@ import IssueVisibility from './issue-visibility';
 import {HIT_SLOP} from '../common-styles/button';
 import {COLOR_ICON_LIGHT_BLUE, COLOR_ICON_MEDIUM_GREY, COLOR_PINK} from '../variables/variables';
 
-import styles from './visibility.styles';
+import styles from './visibility-control.styles';
 
 import type {User} from '../../flow/User';
 import type {UserGroup} from '../../flow/UserGroup';
@@ -47,7 +47,7 @@ export default class VisibilityControl extends PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      visibility: null,
+      visibility: props.visibility,
       isSelectVisible: false
     };
   }
@@ -145,6 +145,14 @@ export default class VisibilityControl extends PureComponent<Props, State> {
     );
   }
 
+  getVisibilityPresentation(visibility: Visibility): string {
+    const author: ?User = visibility?.implicitPermittedUsers && visibility.implicitPermittedUsers[0];
+    return [
+      getEntityPresentation(author),
+      IssueVisibility.getVisibilityShortPresentation(visibility)
+    ].join(', ');
+  }
+
   renderVisibilityButton() {
     const {onSubmit} = this.props;
     const {visibility} = this.state;
@@ -152,6 +160,7 @@ export default class VisibilityControl extends PureComponent<Props, State> {
 
     return (
       <View
+        testID="visibilityControlButton"
         style={[
           styles.container,
           this.props.style
@@ -181,7 +190,7 @@ export default class VisibilityControl extends PureComponent<Props, State> {
             />
           )}
           <Text style={styles.buttonText}>
-            {isSecured ? IssueVisibility.getVisibilityShortPresentation(visibility) : 'Visible to All Users'}
+            {isSecured ? this.getVisibilityPresentation(visibility) : 'Visible to All Users'}
           </Text>
           <IconAngleDown size={20} color={COLOR_ICON_MEDIUM_GREY}/>
         </TouchableOpacity>
@@ -192,7 +201,7 @@ export default class VisibilityControl extends PureComponent<Props, State> {
 
   render() {
     return (
-      <View>
+      <View testID="visibilityControl">
 
         {this.renderVisibilityButton()}
         {this.state.isSelectVisible && this.renderSelect()}

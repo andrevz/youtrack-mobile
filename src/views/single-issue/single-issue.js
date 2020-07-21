@@ -5,7 +5,7 @@ import {
   RefreshControl,
   Dimensions
 } from 'react-native';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -70,7 +70,7 @@ type TabsState = {
   isTransitionInProgress: boolean
 };
 
-class SingeIssueView extends Component<SingleIssueProps, TabsState> {
+class SingeIssueView extends PureComponent<SingleIssueProps, TabsState> {
   static contextTypes = {
     actionSheet: PropTypes.func
   };
@@ -258,7 +258,7 @@ class SingeIssueView extends Component<SingleIssueProps, TabsState> {
 
   canUpdateGeneralInfo = (): boolean => {
     const {issue, issuePermissions} = this.props;
-    return !!issue && issuePermissions.canUpdateGeneralInfo(issue);
+    return !!issue && !!issuePermissions && issuePermissions.canUpdateGeneralInfo(issue);
   };
 
   renderActionsIcon() {
@@ -311,7 +311,7 @@ class SingeIssueView extends Component<SingleIssueProps, TabsState> {
       );
     }
 
-    return <Skeleton width={120}/>;
+    return this.isIssueLoaded() ? null : <Skeleton width={120}/>;
   }
 
   _renderHeader() {
